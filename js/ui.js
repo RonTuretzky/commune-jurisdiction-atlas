@@ -240,7 +240,7 @@ window.UI = (function () {
       <p class="p serif" style="font-size:17px">${esc(c.verdict)}</p>
       <div class="alt">Also look at: ${alts.map(a => `<span data-iso="${a.c.iso}">${esc(a.c.name)} ${a.f}%</span>`).join(' · ')}</div>
       <div class="grid">
-        <div class="g"><small>Visa route</small>${bestVisa ? `<b>${esc(bestVisa.name)}</b> — ${esc(bestVisa.requirement)}${bestVisa.pr_years != null ? ` · PR in ${bestVisa.pr_years} yr` : ''}` : esc(c.visa_detail || c.visa_text)}</div>
+        <div class="g"><small>Visa route</small>${bestVisa ? `<b>${esc(bestVisa.name)}</b> — ${esc(bestVisa.requirement.length > 200 ? bestVisa.requirement.slice(0, 200).replace(/\s+\S*$/, '') + '…' : bestVisa.requirement)}${bestVisa.pr_years != null ? ` · PR in ${bestVisa.pr_years} yr` : ''}${bestVisa.citizenship_years != null ? ` · citizenship ${bestVisa.citizenship_years} yr` : ''}` : esc(c.visa_detail || c.visa_text)}</div>
         <div class="g"><small>Legal stack</small>${(c.legal.vehicles || []).length ? c.legal.vehicles.slice(0, 3).map(v => `<b>${esc(v.name)}</b>`).join(' · ') : esc(c.legal.text)}</div>
         <div class="g"><small>Land</small>${A.ownBadge(c.land.ownership)} · <b>${A.fmtUSD(c.farm_usd_ha)}/ha</b> typical</div>
         <div class="g"><small>Resilience</small><b>${Math.round(A.stabBlend(c, 'overall') || 0)}/100</b> overall · ${Math.round(A.stabBlend(c, 'currency') || 0)} currency · ${Math.round(A.stabBlend(c, 'climate') || 0)} climate</div>

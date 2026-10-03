@@ -66,7 +66,8 @@ window.ATLAS = (function () {
   // ---- scoring ----
   function stabBlend(c, mode) { const s = c.stab6; if (!s) return null; const W = SCENARIOS[mode] || SCENARIOS.overall; let n = 0, d = 0; STAB_DIMS.forEach((k, i) => { if (typeof s[k] === 'number') { n += W[i] * s[k]; d += W[i]; } }); return d ? n / d : null; }
   function fit(c, W) { let n = 0, d = 0; LENSES.forEach(l => { const w = +W[l] || 0; n += w * c.scores[l]; d += w * 3; }); return d ? Math.round(100 * n / d) : 0; }
-  function minVisa(c, key) { const v = (c.visas || []).map(x => x[key]).filter(x => typeof x === 'number' && x > 0); return v.length ? Math.min(...v) : null; }
+  // fastest realistic route for a generic applicant: nationality-specific (ancestry) routes excluded
+  function minVisa(c, key) { const v = (c.visas || []).filter(x => x.type !== 'ancestry').map(x => x[key]).filter(x => typeof x === 'number' && x > 0); return v.length ? Math.min(...v) : null; }
 
   const fmtInt = v => v == null ? '—' : Math.round(v).toLocaleString('en-US');
   const fmtUSD = v => v == null ? '—' : '$' + fmtInt(v);
