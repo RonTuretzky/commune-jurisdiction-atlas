@@ -286,4 +286,9 @@ table.data td .n{font-family:var(--mono);color:var(--wheat)}
   h2{font-size:24px}
   #legend{left:10px;bottom:10px;max-width:46vw;min-width:150px}
 }
+/* ---------- embed mode (iframe in the course deck) ---------- */
+body.embed #top{display:none}body.embed main{height:100%}
+body.embed .edge-toggle{display:block}
+body.embed #embed-open{position:absolute;right:14px;top:52px;z-index:5;font-family:var(--sans);font-size:12px;text-decoration:none;background:rgba(15,15,12,.86);border:1px solid var(--line2);border-radius:8px;padding:5px 9px;color:var(--wheat)}
+body.embed #stage-note{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

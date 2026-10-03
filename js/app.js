@@ -14,6 +14,7 @@
     if (h.get('fam')) V.fams = new Set(h.get('fam').split(',').filter(f => A.FAMILIES[f])); if (h.get('hist') === '1') V.historic = true;
     if (h.get('mode')) V.mode = h.get('mode'); if (h.get('cmp')) V.compare = h.get('cmp').split(',').filter(i => ST.byIso[i]).slice(0, 4);
     if (h.get('comms') === '0') V.comms = false;
+    if (h.get('embed') === '1') { V.embed = true; document.body.classList.add('embed'); }
   }
   let hashLock = false;
   function writeHash() {
@@ -113,7 +114,9 @@
   $('#mode-flat').onclick = () => { V.mode = 'flat'; G.setMode('flat'); $('#mode-flat').classList.add('on'); $('#mode-3d').classList.remove('on'); writeHash(); };
   $('#zoom-in').onclick = () => G.zoomBy(1.35); $('#zoom-out').onclick = () => G.zoomBy(1 / 1.35); $('#reset-view').onclick = () => G.reset();
   $('#left-toggle').onclick = () => $('#view-globe').classList.toggle('left-closed'); $('#right-toggle').onclick = () => $('#view-globe').classList.toggle('right-closed');
-  if (window.innerWidth < 980) { $('#view-globe').classList.add('left-closed', 'right-closed'); }
+  if (window.innerWidth < 980 || V.embed) { $('#view-globe').classList.add('left-closed', 'right-closed'); }
+  if (V.embed) { const a = document.createElement('a'); a.href = location.href.replace(/([&#])embed=1&?/, '$1').replace(/[&#]$/, ''); a.target = '_blank'; a.rel = 'noopener'; a.id = 'embed-open'; a.textContent = 'open full atlas ↗'; $('#stage').appendChild(a); }
+  if (V.embed) writeHash = (function (orig) { return function () { orig(); if (!/embed=1/.test(location.hash)) history.replaceState(null, '', location.hash + (location.hash.length > 1 ? '&' : '#') + 'embed=1'); }; })(writeHash);
   // search
   const sr = $('#search-results');
   $('#search').oninput = e => {
