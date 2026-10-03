@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Commune Jurisdiction Atlas — where an intentional community actually pencils out</title>
+<meta name="description" content="An interactive globe that scores 50 jurisdictions for siting an agrarian commune, ecovillage or cooperative farm — land, visas, tax, communal law, quality of life, stability — and maps more than a thousand real intentional communities worldwide. Every figure links to its source.">
+<meta property="og:title" content="Commune Jurisdiction Atlas">
+<meta property="og:description" content="50 jurisdictions scored for siting an intentional community, 1,000+ real communes and ecovillages mapped, every figure sourced.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0f0f0c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%231a2233' stroke='%23f5deb3' stroke-width='6'/%3E%3Cpath d='M20 50h60M50 6c-18 12-18 76 0 88M50 6c18 12 18 76 0 88' stroke='%23d4a373' stroke-width='5' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/atlas.css">
+</head>
+<body>
+<a class="skip" href="#detail">Skip to details</a>
+<header id="top">
+  <a class="brand" href="#view=globe" id="brand">
+    <span class="logo" aria-hidden="true"></span>
+    <span class="brand-text"><strong>Commune Jurisdiction Atlas</strong><small>where an intentional community actually pencils out</small></span>
+  </a>
+  <nav id="nav" aria-label="Views">
+    <button data-view="globe" class="on">Explore</button>
+    <button data-view="compare">Compare</button>
+    <button data-view="table">Table</button>
+    <button data-view="communities">Communities</button>
+    <button data-view="method">Method &amp; sources</button>
+  </nav>
+  <div class="actions">
+    <button id="btn-wizard" class="primary">✦ Find my match</button>
+    <button id="btn-share" title="Copy a link to exactly this view">Share</button>
+    <a href="https://ronturetzky.github.io/session6-choosing-ground/" target="_blank" rel="noopener">Course deck ↗</a>
+    <a id="gh-link" href="https://github.com/RonTuretzky/commune-jurisdiction-atlas" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+  <button id="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+</header>
+
+<main id="main">
+
+<!-- ============ EXPLORE (globe) ============ -->
+<section id="view-globe" class="view on" aria-label="Explore">
+  <aside id="left" class="panel">
+    <div class="panel-scroll">
+      <div class="block">
+        <label class="lbl" for="metric">Colour the map by</label>
+        <select id="metric">
+          <optgroup label="Commune suitability">
+            <option value="comp">Total suitability (0–18)</option>
+            <option value="fit">My weighted fit (sliders below)</option>
+          </optgroup>
+          <optgroup label="One lens at a time (0–3)">
+            <option value="LAND">LAND — cheap &amp; ownable land</option>
+            <option value="VISA">VISA — a group can actually get in</option>
+            <option value="TAX">TAX — light tax burden</option>
+            <option value="LAW">LAW — communal vehicles &amp; zoning</option>
+            <option value="LIFE">LIFE — quality of life, health, safety</option>
+            <option value="STAB">STAB — stability</option>
+          </optgroup>
+          <optgroup label="Resilience — brace for…">
+            <option value="res:overall">Resilience — overall</option>
+            <option value="res:currency">…a currency crisis</option>
+            <option value="res:war">…war in the region</option>
+            <option value="res:climate">…a climate shock</option>
+            <option value="res:authoritarian">…an authoritarian turn</option>
+          </optgroup>
+          <optgroup label="Raw figures">
+            <option value="farm">Farmland price (USD/ha — cheaper is brighter)</option>
+            <option value="cost">Monthly cost per adult (cheaper is brighter)</option>
+            <option value="own">Can foreigners own farmland?</option>
+            <option value="pr">Years to permanent residency (fewer is brighter)</option>
+            <option value="cit">Years to citizenship (fewer is brighter)</option>
+            <option value="toptax">Top income-tax rate (lower is brighter)</option>
+          </optgroup>
+          <optgroup label="Published indices (latest edition)">
+            <option value="idx:gpi_2025_score">Global Peace Index 2025 (lower score = more peaceful)</option>
+            <option value="idx:wjp_2025_score">WJP Rule of Law 2025</option>
+            <option value="idx:cpi_2025">Transparency CPI 2025</option>
+            <option value="idx:nd_gain_score">ND-GAIN climate readiness</option>
+            <option value="idx:fsi_2025">Fragile States Index 2025 (lower = more stable)</option>
+            <option value="idx:hdi">Human Development Index</option>
+            <option value="idx:numbeo_qol">Numbeo quality-of-life index</option>
+          </optgroup>
+          <optgroup label="Communities">
+            <option value="density">Mapped communities per country (every country)</option>
+          </optgroup>
+        </select>
+        <p class="tiny" id="metric-help"></p>
+      </div>
+
+      <div class="block" id="weights">
+        <div class="lbl-row"><label class="lbl">Weight what matters to your group</label><button class="link" id="w-reset">reset</button></div>
+        <div class="sliders">
+          <div class="sr"><label style="--c:var(--lensLAND)">Cheap, ownable land</label><input type="range" min="0" max="5" value="3" data-lens="LAND" aria-label="weight: land"><b>3</b></div>
+          <div class="sr"><label style="--c:var(--lensVISA)">Easy visa for a group</label><input type="range" min="0" max="5" value="3" data-lens="VISA" aria-label="weight: visa"><b>3</b></div>
+          <div class="sr"><label style="--c:var(--lensTAX)">Low tax</label><input type="range" min="0" max="5" value="2" data-lens="TAX" aria-label="weight: tax"><b>2</b></div>
+          <div class="sr"><label style="--c:var(--lensLAW)">Communal legal vehicles</label><input type="range" min="0" max="5" value="2" data-lens="LAW" aria-label="weight: law"><b>2</b></div>
+          <div class="sr"><label style="--c:var(--lensLIFE)">Quality of life</label><input type="range" min="0" max="5" value="3" data-lens="LIFE" aria-label="weight: life"><b>3</b></div>
+          <div class="sr"><label style="--c:var(--lensSTAB)">Stability</label><input type="range" min="0" max="5" value="3" data-lens="STAB" aria-label="weight: stability"><b>3</b></div>
+        </div>
+        <div class="presets">
+          <button data-p="land">Cheap land + visa</button>
+          <button data-p="digital">Low-tax remote</button>
+          <button data-p="qol">Safe &amp; high QoL</button>
+          <button data-p="hedge">Hedge</button>
+          <button data-p="balanced">Balanced</button>
+        </div>
+        <div id="fit-top"></div>
+      </div>
+
+      <div class="block" id="layers">
+        <label class="lbl">Layers</label>
+        <label class="chk"><input type="checkbox" id="ly-scored" checked> Scored jurisdictions <span class="count">50</span></label>
+        <label class="chk"><input type="checkbox" id="ly-comms" checked> Intentional communities <span class="count" id="comm-count"></span></label>
+        <div id="type-filters" class="chips" aria-label="community types"></div>
+        <label class="chk"><input type="checkbox" id="ly-historic"> include historic / defunct</label>
+        <label class="chk"><input type="checkbox" id="ly-rotate" checked> auto-rotate until I touch it</label>
+      </div>
+
+      <div class="block">
+        <label class="lbl" for="search">Search</label>
+        <input type="search" id="search" placeholder="a country, a community, a type…" autocomplete="off">
+        <div id="search-results" class="results"></div>
+      </div>
+
+      <div class="block">
+        <div class="lbl-row"><label class="lbl">Ranked by current colour</label><span class="tiny" id="ranked-note"></span></div>
+        <ol id="ranked"></ol>
+      </div>
+
+      <div class="block tiny muted" id="data-note"></div>
+    </div>
+  </aside>
+
+  <div id="stage">
+    <canvas id="gl" aria-label="3D globe"></canvas>
+    <canvas id="c2d" aria-label="map"></canvas>
+    <div id="tooltip" hidden></div>
+    <div id="legend">
+      <b id="legend-title">total suitability</b>
+      <div class="bar" id="legend-bar"></div>
+      <div class="ends"><span id="legend-lo">lower</span><span id="legend-hi">higher</span></div>
+      <div id="legend-types" hidden></div>
+    </div>
+    <div id="stage-tools" role="toolbar" aria-label="map tools">
+      <button id="mode-3d" class="on" title="3D globe">Globe</button><button id="mode-flat" title="Flat map">Flat</button>
+      <span class="sep"></span>
+      <button id="zoom-in" title="zoom in">+</button><button id="zoom-out" title="zoom out">−</button><button id="reset-view" title="reset view">⟲</button>
+    </div>
+    <div id="stage-note" class="tiny"></div>
+    <button id="left-toggle" class="edge-toggle" aria-label="toggle controls" title="controls">☰</button>
+    <button id="right-toggle" class="edge-toggle" aria-label="toggle details" title="details">i</button>
+    <div id="loading"><div class="spinner"></div><span>loading the planet…</span></div>
+  </div>
+
+  <aside id="right" class="panel">
+    <div class="panel-scroll" id="detail">
+      <div class="empty">
+        <p><b>Click a country</b> for its full dossier — land, visas, tax, legal vehicles, healthcare, pensions, stability, dealbreakers — every figure linked to its source.</p>
+        <p><b>Click a dot</b> for a real community that already lives this way.</p>
+        <p class="tiny">drag to spin · scroll to zoom · hover for names</p>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section id="view-compare" class="view" aria-label="Compare">
+  <div class="page wide">
+    <p class="kicker">Side by side</p>
+    <h2>Compare jurisdictions</h2>
+    <p class="lede">Pick up to four. Each row shows the figure and, where we have it, the source behind it.</p>
+    <div id="cmp-pickers" class="pickers"></div>
+    <div id="cmp-out"></div>
+  </div>
+</section>
+
+<!-- ============ TABLE ============ -->
+<section id="view-table" class="view" aria-label="Table">
+  <div class="page wide">
+    <p class="kicker">The whole dataset</p>
+    <h2>All 50 jurisdictions</h2>
+    <p class="lede">Click a header to sort. Click a row to open its dossier on the globe. Download the data as CSV or JSON.</p>
+    <div class="toolbar">
+      <input type="search" id="tbl-search" placeholder="filter…" aria-label="filter table">
+      <select id="tbl-region" aria-label="region"><option value="">all regions</option></select>
+      <select id="tbl-own" aria-label="ownership"><option value="">any farmland ownership</option><option value="allowed">foreigners may own</option><option value="restricted">restricted</option><option value="banned">banned (lease only)</option></select>
+      <button id="tbl-csv">Download CSV</button><button id="tbl-json">Download JSON</button>
+    </div>
+    <div class="tbl-wrap"><table id="tbl" class="data"></table></div>
+  </div>
+</section>
+
+<!-- ============ COMMUNITIES ============ -->
+<section id="view-communities" class="view" aria-label="Communities">
+  <div class="page wide">
+    <p class="kicker">Who is already doing this</p>
+    <h2>Intentional communities <span id="cm-total" class="count"></span></h2>
+    <p class="lede">Ecovillages, communes, income-sharing communities, cohousing, kibbutzim, Hutterite and Bruderhof colonies, cooperative villages and the historic utopias that came before them — harvested from Wikidata, the Global Ecovillage Network, the Foundation for Intentional Community, Eurotopia, Diggers &amp; Dreamers and national networks, then checked and de-duplicated. Click a row to fly there.</p>
+    <div class="toolbar">
+      <input type="search" id="cm-search" placeholder="name, place, description…" aria-label="search communities">
+      <select id="cm-country" aria-label="country"><option value="">every country</option></select>
+      <select id="cm-type" aria-label="type"><option value="">every type</option></select>
+      <select id="cm-status" aria-label="status"><option value="">active + historic</option><option value="active">active</option><option value="historic">historic</option><option value="forming">forming</option></select>
+      <select id="cm-sort" aria-label="sort"><option value="name">sort: name</option><option value="country">sort: country</option><option value="founded">sort: founded</option><option value="population">sort: population</option><option value="type">sort: type</option></select>
+      <button id="cm-csv">Download CSV</button><button id="cm-json">Download JSON</button>
+    </div>
+    <div id="cm-stats" class="stats"></div>
+    <div class="tbl-wrap"><table id="cm-tbl" class="data"></table></div>
+    <div class="pager"><button id="cm-more">Show more</button><span id="cm-shown" class="tiny"></span></div>
+  </div>
+</section>
+
+<!-- ============ METHOD & SOURCES ============ -->
+<section id="view-method" class="view" aria-label="Method and sources">
+  <div class="page prose" id="method">
+    <p class="kicker">How this was made</p>
+    <h2>Method, data &amp; sources</h2>
+    <p class="lede">This atlas grew out of Session 6 (“Choosing Ground”) of the course <i>Design an Agrarian Industrial Commune</i> at The Convent, Greenpoint, Brooklyn. It is decision-support for groups asking <b>where in the world a commune actually pencils out</b> — not legal advice. Confirm anything load-bearing with a local lawyer before you act.</p>
+
+    <h3>The triangle</h3>
+    <p>Every siting decision trades three things against each other: <b>quality of life</b>, the <b>cost of land</b>, and how <b>hard it is for a whole group to immigrate</b>. You rarely get all three. The strongest places hand you two and let you finesse the third — depopulating interiors with cheap land and an easy passive-income visa, or easy-residency countries with middling services, or high-QoL countries that will take you only if you bring money.</p>
+
+    <h3>The six lenses (0–3 each, composite 0–18)</h3>
+    <table class="data compact">
+      <thead><tr><th>Lens</th><th>What scores a 3</th><th>What scores a 0</th></tr></thead>
+      <tbody>
+        <tr><td><b style="color:var(--lensLAND)">LAND</b></td><td>Rural land is cheap by global standards <i>and</i> foreigners (or a foreign-owned entity) can own it freehold; cheap-house or abandoned-village programmes exist</td><td>Land is expensive, or foreigners are barred from farmland and only long leases exist</td></tr>
+        <tr><td><b style="color:var(--lensVISA)">VISA</b></td><td>A realistic route for <i>every adult in a group</i>: passive-income or rentista visa with a modest threshold, fast processing, short path to permanent residency</td><td>Only work-sponsored or investor routes; long or uncertain path to residency</td></tr>
+        <tr><td><b style="color:var(--lensTAX)">TAX</b></td><td>Territorial system or a special regime that leaves foreign income, pensions and co-op surpluses lightly taxed</td><td>Worldwide taxation at high rates, wealth tax, no special regime</td></tr>
+        <tr><td><b style="color:var(--lensLAW)">LAW</b></td><td>Purpose-built communal vehicles (land co-ops, community land trusts, foundations) and zoning that lets a group build and farm together</td><td>No communal vehicle, hostile or opaque zoning, communal title unrecognised</td></tr>
+        <tr><td><b style="color:var(--lensLIFE)">LIFE</b></td><td>Safe, healthy, good public healthcare that new residents can join, temperate climate, services reach the countryside</td><td>Unsafe, thin healthcare, extreme climate, services absent where land is cheap</td></tr>
+        <tr><td><b style="color:var(--lensSTAB)">STAB</b></td><td>Stable politics, strong rule of law, sound currency, peace, climate-resilient</td><td>Fragile state, weak courts, currency crises, conflict exposure</td></tr>
+      </tbody>
+    </table>
+    <p>Scores are opinionated and comparable, not precise. They were first set in a July-2026 synthesis for the course deck, then <b>re-scored country by country in October 2026</b> by research agents instructed to move a score only when verified evidence warranted it; the rationale and the original score are shown on every dossier.</p>
+
+    <h3>Your weighted fit</h3>
+    <p>The six sliders weight the lenses 0–5. Fit = Σ(weight × score) ÷ Σ(weight × 3), shown as a percentage. The presets are starting points — “Cheap land + visa” (LAND 5, VISA 5, TAX 2, LAW 3, LIFE 1, STAB 1), “Low-tax remote” (TAX 5, VISA 4, LIFE 3), “Safe &amp; high QoL” (LIFE 5, STAB 5, LAW 3), “Hedge” (STAB 5, LAND 3, LIFE 3), “Balanced” (all 3).</p>
+
+    <h3>Resilience model</h3>
+    <p>Stability is broken into six 0–100 dimensions — <b>political</b>, <b>rule of law</b>, <b>safety</b>, <b>economic/currency</b>, <b>peace/conflict</b>, <b>climate</b> — each grounded in a published index (Global Peace Index, WJP Rule of Law Index, Transparency CPI, Fragile States Index, ND-GAIN, Numbeo) with a one-line reason per dimension. Shock scenarios re-weight the dimensions:</p>
+    <table class="data compact" id="scenario-table"></table>
+
+    <h3>Where the numbers come from</h3>
+    <ol>
+      <li><b>Jurisdiction dossiers.</b> One research agent per country, working from primary sources (immigration and tax authorities, PwC/KPMG/EY tax summaries, Eurostat, USDA, FAO, national statistics, index publishers, immigration-law firms) and asked to list every realistic visa route, current farmland prices in USD/ha, foreign-ownership rules, tax treatment of foreign income and pensions, healthcare access for new residents, agricultural support, the actual legal vehicles a commune could use, climate and water risk, and 3–10 existing communities. Every claim carries a URL.</li>
+      <li><b>Adversarial fact-check.</b> A second, independent agent per country tried to <i>refute</i> the nine most load-bearing claims (ownership status, land price, visa thresholds, residency and citizenship timelines, tax system, cost, indices, healthcare access, existence of the listed communities). Verdicts and corrections are shown on each dossier under “Fact-check”.</li>
+      <li><b>Communities.</b> A Wikidata harvest of every item typed intentional community, ecovillage, kibbutz, cohousing, moshav or Hutterite colony that has coordinates; plus 29 regional and network sweeps (GEN, FIC, Eurotopia, Diggers &amp; Dreamers, cohousing directories, Bruderhof, Twelve Tribes, Camphill, Hutterite colony lists, Anastasia settlements, Asian and African networks, historic utopias) each followed by a checker that flagged fakes, duplicates and bad coordinates; plus the communities surfaced by the country research. Every point was then tested against country polygons, and duplicates were merged by name and distance.</li>
+    </ol>
+    <div id="src-stats" class="stats"></div>
+
+    <h3>Caveats</h3>
+    <ul>
+      <li>Visa thresholds, tax regimes and ownership rules change constantly (several did in 2025–26: Portugal’s citizenship clock, Spain’s golden visa, Italy’s crypto rate). The build date is shown at the bottom of the left panel.</li>
+      <li>Farmland prices are regional ranges in USD per hectare for the cheapest <i>usable</i> land, typical productive land, and prime land. They are indicative, not appraisals.</li>
+      <li>Communities data is a census of what is findable online. Coordinates for some entries are the village they sit in, not the gate. “Historic” means the community no longer exists in its original form.</li>
+      <li>Kibbutzim and moshavim in the occupied West Bank and Golan Heights are labelled by the territory Wikidata records them in; the atlas takes no position.</li>
+      <li>Agents can be wrong. Where the fact-checker and the researcher disagreed, both are shown.</li>
+    </ul>
+
+    <h3>Reuse</h3>
+    <p>Code and data are open: <a id="gh-link-2" href="https://github.com/RonTuretzky/commune-jurisdiction-atlas" target="_blank" rel="noopener">github.com/RonTuretzky/commune-jurisdiction-atlas</a>. Data files: <code>data/countries.json</code>, <code>data/communities.json</code>, <code>data/sources.json</code>. Cite as “Commune Jurisdiction Atlas, The Convent / Decentral Park, 2026”. Map geometry: Natural Earth via world-atlas. Libraries: three.js, d3, topojson. Index publishers retain rights to their figures.</p>
+
+    <h3>Every source <span class="count" id="src-count"></span></h3>
+    <p class="tiny">Grouped by site. The number after a link shows how many jurisdictions or communities cite it. Use the filter to find a specific one.</p>
+    <input type="search" id="src-filter" placeholder="filter sources…" aria-label="filter sources">
+    <div id="sources-list"></div>
+  </div>
+</section>
+</main>
+
+<!-- ============ WIZARD ============ -->
+<div id="wizard" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="wiz-title">
+  <div class="modal-card">
+    <button class="close" id="wiz-close" aria-label="close">×</button>
+    <p class="kicker">Six questions</p>
+    <h2 id="wiz-title">Find your starting point</h2>
+    <div class="dots" id="wiz-dots"></div>
+    <div id="wiz-body"></div>
+    <div class="wiz-nav"><button id="wiz-back" class="ghost">← back</button><span></span><button id="wiz-restart" class="ghost" hidden>start over</button></div>
+  </div>
+</div>
+
+<div id="toast" hidden></div>
+
+<script src="vendor/d3.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/data.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
